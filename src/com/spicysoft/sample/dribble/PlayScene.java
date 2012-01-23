@@ -98,6 +98,7 @@ final class PlayScene implements Scene
     ballVY = 0;
     dribbled = 0;
     gameStarted = System.currentTimeMillis();
+    Sounds.playBgmPlay();
   }
 
   /**
@@ -155,6 +156,7 @@ final class PlayScene implements Scene
         ballY = floor - bounce;
         ballVY = -ballVY * DECAY_VERTICAL;
         dribbled++;
+        Sounds.playBounce1();
         Log.v("Dribble","Bound on the floor: ballVY=" + ballVY + ",bounce=" + bounce);
   
         final float a = BALL_RADIUS / 2;
@@ -185,12 +187,14 @@ final class PlayScene implements Scene
           + BALL_RADIUS;
       ballVX = -ballVX * DECAY_VERTICAL;
       ballVY = ballVY * DECAY_HORIZONTAL;
+      Sounds.playBounce2();
 
     } else if (rightWall <= ballX) {
       // ‰E‚Ì•Ç‚ÉÕ“Ë
       ballX = rightWall - (ballX - rightWall) * DECAY_VERTICAL * DECAY_VERTICAL;
       ballVX = -ballVX * DECAY_VERTICAL;
       ballVY = ballVY * DECAY_HORIZONTAL;
+      Sounds.playBounce2();
 
     }
   }
