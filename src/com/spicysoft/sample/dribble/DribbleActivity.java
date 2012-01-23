@@ -23,11 +23,13 @@ public final class DribbleActivity extends Activity
 
   @Override protected void onPause() {
     Log.d("Dribble", "onPause");
+    Sounds.pauseBgm();
     super.onPause();
   }
 
   @Override protected void onResume() {
     Log.d("Dribble", "onResume");
+    Sounds.resumeBgm();
     super.onResume();
   }
 

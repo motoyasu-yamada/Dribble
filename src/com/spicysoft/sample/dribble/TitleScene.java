@@ -1,5 +1,7 @@
 package com.spicysoft.sample.dribble;
 
+import java.text.SimpleDateFormat;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,6 +13,8 @@ import android.view.SurfaceView;
  */
 final class TitleScene implements Scene
 {
+  /** 日付を文字列化する時の書式 */
+  private static final SimpleDateFormat format = new SimpleDateFormat("yy年M月d日");
   /** 1秒で点滅する */
   private static final long BLINK_DURATION = 2000;
   
@@ -44,6 +48,7 @@ final class TitleScene implements Scene
   /** 表示開始 */
   public void start(SurfaceView view) {
     blinkStarted = System.currentTimeMillis();
+    Sounds.playBgmTitle();
   }
 
   /** 
@@ -52,6 +57,7 @@ final class TitleScene implements Scene
   public void process(SurfaceView view) {
     final MotionEvent e = Main.event();
     if (e != null && e.getAction() == MotionEvent.ACTION_UP) {
+      Sounds.playTouch();
       Main.startScene(Main.PLAY);
     }
   }
@@ -77,6 +83,7 @@ final class TitleScene implements Scene
     }
     msgPaint.setColor(Color.rgb(g, g, g));
     canvas.drawText("Touch to Start!", w / 2, h / 2 + 48, msgPaint);
+    canvas.drawText("ベストスコア " + PlayLog.bestScore() + "回 " + format.format(PlayLog.bestPlayedAt()), w / 2, h / 2 + 96, msgPaint);
   }
 
 }

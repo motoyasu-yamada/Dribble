@@ -38,6 +38,7 @@ final class OverScene implements Scene
   public void start(SurfaceView view)
   {
     start = System.currentTimeMillis();
+    Sounds.stopBgm();
   }
 
   /** 
@@ -48,6 +49,7 @@ final class OverScene implements Scene
     final long elapsed = System.currentTimeMillis() - start;
     final MotionEvent e = Main.event();
     if (WAIT < elapsed && e != null && e.getAction() == MotionEvent.ACTION_UP || AUTO <= elapsed) {
+      Sounds.playTouch();
       Main.startScene(Main.TITLE);
     }
   }
@@ -62,6 +64,9 @@ final class OverScene implements Scene
     final int centerX = canvas.getWidth() / 2;
     final int centerY = canvas.getHeight() / 2;
     canvas.drawText("記録 " + PlayLog.lastScore() + " 回", centerX , centerY, paintScore);
+    if (PlayLog.isLastBest()) {
+      canvas.drawText("!! ベストスコア !!", centerX , centerY + paintScore.ascent() * 2, paintScore);
+    }
   }
 }
 

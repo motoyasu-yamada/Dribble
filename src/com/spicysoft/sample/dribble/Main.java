@@ -42,6 +42,8 @@ final class Main
   public static void createThread(final SurfaceView view) {
     Main.view = view;
     if (first) {
+      Sounds.init(view.getContext());
+      PlayLog.init(view.getContext());
       Main.initScenes(view);
       startScene(Main.TITLE);
       first = false;
@@ -59,6 +61,7 @@ final class Main
    */
   public static void interruptThread() {
     thread.interrupt();
+    Sounds.term();
   }
 
   /**
