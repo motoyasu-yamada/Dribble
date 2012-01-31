@@ -44,6 +44,8 @@ final class Main
     if (first) {
       Sounds.init(view.getContext());
       PlayLog.init(view.getContext());
+      BackgroundImage.init(view.getContext());
+      
       Main.initScenes(view);
       startScene(Main.TITLE);
       first = false;

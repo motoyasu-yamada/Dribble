@@ -24,6 +24,7 @@ public final class DribbleActivity extends Activity
   @Override protected void onPause() {
     Log.d("Dribble", "onPause");
     Sounds.pauseBgm();
+    Main.interruptThread();
     super.onPause();
   }
 

@@ -203,16 +203,36 @@ final class PlayScene implements Scene
    * äeÉtÉåÅ[ÉÄÇ≈ÇÃï`âÊ
    */
   public void draw(Canvas canvas) {
-    canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(),
-        backgroundPaint);
+    canvas.drawRect(0,0,canvas.getWidth(), canvas.getHeight(),backgroundPaint);
     ballDst.set(ballX - BALL_RADIUS, ballY - BALL_RADIUS, ballX + BALL_RADIUS,
         ballY + BALL_RADIUS);
 
+    drawBitmapToFitTrim(canvas,BackgroundImage.image());
     canvas.drawBitmap(ball, ballSrc[0], ballDst, ballPaint);
 
     canvas.drawText(dribbled + " âÒ", 0, 48, paintScore);
     canvas.drawText("Ç†Ç∆ " + remainedTime + "ïb", canvas.getWidth(), 48,
         paintRemainTime);
+  }
+
+  private static void drawBitmapToFitTrim(final Canvas canvas,final Bitmap bitmap)
+  {
+    final Rect canvasRect = new Rect(0,0,canvas.getWidth(), canvas.getHeight());
+    final float canvasAspect = ((float)canvasRect.width()) / canvasRect.height();
+    final float imageAspect  = ((float)bitmap.getWidth()) / bitmap.getHeight();
+    final Rect src;
+    if (canvasAspect < imageAspect) {
+   // ècâ°î‰Ç≈ÅAâÊëúÇ™âÊñ ÇÊÇËâ°í∑Ç»ÇÁ
+      final int trimWidth = (int)(bitmap.getHeight() * canvasAspect);
+      final int left = (bitmap.getWidth() - trimWidth) / 2;
+      src = new Rect(left,0,trimWidth+left,bitmap.getHeight());
+    } else {
+      // ècâ°î‰Ç≈ÅAâÊëúÇ™âÊñ ÇÊÇËècí∑Ç»ÇÁ
+      final int trimHeight = (int)(bitmap.getWidth() / canvasAspect);
+      final int top = (bitmap.getHeight() - trimHeight) / 2;
+      src = new Rect(0,top,bitmap.getWidth(),top + trimHeight);
+    }
+    canvas.drawBitmap(bitmap,src,canvasRect, ballPaint);
   }
 
 }
