@@ -19,6 +19,12 @@ import android.util.Log;
  */
 class BackgroundImage
 {
+  /**
+   * The image of "http://farm4.staticflickr.com/3084/3206940931_156126f790_b.jpg"
+   * is By SAN_DRINO under Creative Commons License.
+   * http://www.flickr.com/photos/san_drino/3206940931/
+  */
+  private static final String URL_IMAGE = "http://farm4.staticflickr.com/3084/3206940931_156126f790_b.jpg";
   /** ネットから取得した背景画像を保管するファイル名 */
   private static final String FILENAME_BKGND= "bkgnd.image";
   /** 読み込んだ背景画像 */
@@ -34,25 +40,27 @@ class BackgroundImage
   static void init(final Context context)
   {
     BackgroundImage.context = context;
-    try {
-      byte[] data;
-      data = load(FILENAME_BKGND);
-      if (data != null) {
-        Log.i("Dribble","BackgroundImage is loaded from the file.");
-      } else {
-        data = httpGetBinary("http://farm4.staticflickr.com/3084/3206940931_156126f790_b.jpg");
-        if (data != null) {
-          Log.i("Dribble","BackgroundImage is got from the internet.");
-          save(FILENAME_BKGND,data);
-        } else {
-          Log.i("Dribble","BackgroundImage can't be got from the internet.");
-        }
-      }
-      image = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-    } catch(final Exception e) {
-      Log.e("Dribble",e.getLocalizedMessage(),e);
+    byte[] data;
+    data = load(FILENAME_BKGND); // (1)
+
+    if (data != null) { // (2)
+      Log.i("Dribble","BackgroundImage is loaded from the file.");
+    } else {
+
+      data = httpGetBinary(URL_IMAGE); // (3)
+
+      if (data != null) { // (4)
+        Log.i("Dribble","BackgroundImage is got from the internet.");
+        save(FILENAME_BKGND,data);
+
+      } else {
+        Log.i("Dribble","BackgroundImage can't be got from the internet.");
+      }
     }
+
+    // (5)
+    image = BitmapFactory.decodeByteArray(data, 0, data.length);
   }
 
   /** 現在の背景画像を取得する */
@@ -64,14 +72,22 @@ class BackgroundImage
   /**
    * 指定したURLにGETメソッドでHTTP通信を行い結果をバイナリー形式で返す
    */
-  private static byte[] httpGetBinary(final String url) throws Exception {
-      final URLConnection connection = new URL(url).openConnection();
-      connection.setDoInput(true);
+  private static byte[] httpGetBinary(final String stringUrl) {
+      try {
+        final URL url = new URL(stringUrl); // (1)
+        final URLConnection connection = url.openConnection(); // (2)
 
-      final InputStream stream = connection.getInputStream();
-      final byte[] data = toByteArray(stream);
-      stream.close();
-      return data;
+        final InputStream stream = connection.getInputStream(); // (3)
+
+        final byte[] data = toByteArray(stream); // (4)
+
+        stream.close(); // (5)
+        return data;
+
+      } catch(final Exception e) { // (6)
+        Log.e("Dribble", "URL_IMAGE:" + stringUrl, e);
+        return null;
+      }
   }
 
   /**
@@ -110,17 +126,18 @@ class BackgroundImage
    */
   private static byte[] toByteArray(final InputStream stream) throws IOException
   {
-    final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    final byte[] temp = new byte[1024];
+    final ByteArrayOutputStream buffer = new ByteArrayOutputStream(); // (1)
+    final byte[] temp = new byte[1024]; // (2)
 
     for(;;) {
-      final int read = stream.read(temp);
-      if (read <= 0) {
+      final int read = stream.read(temp); // (3)
+      if (read < 0) { // (4)
         break;
-      }
-      buffer.write(temp,0,read);
+      } 
+      buffer.write(temp,0,read); // (5)
     }
-    return buffer.toByteArray();
+
+    return buffer.toByteArray(); // (6)
   }
 
 }
